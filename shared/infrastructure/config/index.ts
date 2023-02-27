@@ -4,6 +4,7 @@ export const app = {
   port: Number(process.env.APP_PORT),
   apiKey: process.env.APP_API_KEY as string,
   productionMode: process.env.APP_PRODUCTION_MODE as string,
+  baseUrl: process.env.APP_BASE_URL as string,
 }
 
 export const services = {
