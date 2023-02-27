@@ -1,11 +1,11 @@
-import express from 'express'
 import bodyParser from 'body-parser'
-import path from 'path'
-import v1Router from './api/v1'
-import * as config from '../config'
+import express from 'express'
 import { middleware } from '.'
+import * as config from '../config'
+import v1Router from './api/v1'
 
 const port = config.app.port
+const productionMode = config.app.productionMode
 const app = express()
 
 app.use(bodyParser.json())
@@ -17,19 +17,14 @@ app.get('/ping', (req, res) => {
 app.use('/api/v1', middleware.checkApiKey(), v1Router)
 app.use('/downloads', express.static(config.services.storage.baseDir))
 
-// Test
-
-if (process.env.NODE_ENV === 'production') {
-  // setupProductionServer()
-}
-
 console.log('Configuration: ', config)
 
-app.listen(port, () => console.log(`Server is listening on port: ${port}`))
-
-function setupProductionServer() {
-  app.use(express.static(path.join(__dirname, 'client')))
-  app.get('/*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'index.html')) // TODO: test this after app root modifications
+if (process.env.NODE_ENV === 'production' && productionMode === 'node') {
+  app.listen(() =>
+    console.log(`⚡️[server]: Server is running at http://localhost`)
+  )
+} else {
+  app.listen(port, () => {
+    console.log(`⚡️[server]: Server is running at http://localhost:${port}`)
   })
 }

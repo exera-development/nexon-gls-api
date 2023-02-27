@@ -3,6 +3,7 @@ import Address from '../../../modules/parcel/dtos/address'
 export const app = {
   port: Number(process.env.APP_PORT),
   apiKey: process.env.APP_API_KEY as string,
+  productionMode: process.env.APP_PRODUCTION_MODE as string,
 }
 
 export const services = {
