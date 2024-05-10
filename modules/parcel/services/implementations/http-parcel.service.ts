@@ -4,6 +4,8 @@ import Address from '../../dtos/address'
 import Parcel from '../../dtos/parcel'
 import ParcelService, {
   AllLabelsFailedException,
+  GetParcelStatusesInput,
+  GetParcelStatusesOutput,
   PrintLabelsInput,
   PrintLabelsOutput,
 } from '../parcel.service'
@@ -14,7 +16,7 @@ export type Config = {
   password: string
 }
 
-type PrintLabelsError = {
+type ParcelError = {
   ErrorCode: number
   ErrorDescription: string
   ClientReferenceList: string[]
@@ -27,10 +29,28 @@ type PrintLabelsInfo = {
   ParcelNumber: number
 }
 
+type ParcelStatus = {
+  DepotCity: string
+  DepotNumber: string
+  StatusCode: string
+  StatusDate: string
+  StatusDescription: string
+  StatusInfo: string
+}
+
 type PrintLabelsResponse = {
   Labels: number[]
-  PrintLabelsErrorList: PrintLabelsError[]
+  PrintLabelsErrorList: ParcelError[]
   PrintLabelsInfoList: PrintLabelsInfo[]
+}
+
+type GetParcelStatusesResponse = {
+  ClientReference: string
+  DeliveryCountryCode: string
+  DeliveryZipCode: string
+  ParcelNumber: number
+  GetParcelStatusErrors: ParcelError[]
+  ParcelStatusList: ParcelStatus[]
 }
 
 class HttpParcelService implements ParcelService {
@@ -47,7 +67,7 @@ class HttpParcelService implements ParcelService {
   }
 
   async printLabels(input: PrintLabelsInput): Promise<PrintLabelsOutput> {
-    const request = this.createRequest({
+    const request = this.createPrintLabelsRequest({
       input,
       username: this.username,
       password: this.password,
@@ -65,7 +85,7 @@ class HttpParcelService implements ParcelService {
     }
 
     const { Labels, PrintLabelsErrorList, PrintLabelsInfoList } = result
-    const errorInfoList = this.toErrorInfoList(PrintLabelsErrorList)
+    const errorInfoList = this.toParcelErrorList(PrintLabelsErrorList)
     const labelInfoList = this.toLabelInfoList(PrintLabelsInfoList)
 
     if (!result.PrintLabelsInfoList.length) {
@@ -82,11 +102,45 @@ class HttpParcelService implements ParcelService {
     }
   }
 
+  async getParcelStatuses(
+    input: GetParcelStatusesInput
+  ): Promise<GetParcelStatusesOutput> {
+    const request = this.createGetParcelStatusesRequest({
+      input,
+      username: this.username,
+      password: this.password,
+    })
+
+    let result: GetParcelStatusesResponse
+
+    try {
+      result = await this.axiosInstance
+        .post<GetParcelStatusesResponse>('/GetParcelStatuses', request)
+        .then((result) => result.data)
+    } catch (err) {
+      console.error(err)
+      throw new Error('API error')
+    }
+
+    const { GetParcelStatusErrors, ParcelStatusList } = result
+    const parcelStatusErrors = this.toParcelErrorList(GetParcelStatusErrors)
+    const parcelStatusList = this.toParcelStatusList(ParcelStatusList)
+
+    return {
+      clientReference: result.ClientReference,
+      deliveryCountryCode: result.DeliveryCountryCode,
+      deliveryZipCode: result.DeliveryZipCode,
+      parcelNumber: result.ParcelNumber,
+      parcelStatusErrors,
+      parcelStatusList,
+    }
+  }
+
   private convertToBuffer(byteArray: number[]) {
     return Buffer.from(byteArray)
   }
 
-  private toErrorInfoList(list: PrintLabelsError[]) {
+  private toParcelErrorList(list: ParcelError[]) {
     return list.map((error) => ({
       errorCode: error.ErrorCode,
       errorDescription: error.ErrorDescription,
@@ -103,7 +157,18 @@ class HttpParcelService implements ParcelService {
     }))
   }
 
-  private createRequest({
+  private toParcelStatusList(list: ParcelStatus[]) {
+    return list.map((info) => ({
+      depotCity: info.DepotCity,
+      depotNumber: info.DepotNumber,
+      statusCode: info.StatusCode,
+      statusDate: this.convertStatusDate(info.StatusDate),
+      statusDescription: info.StatusDescription,
+      statusInfo: info.StatusInfo,
+    }))
+  }
+
+  private createPrintLabelsRequest({
     input,
     username,
     password,
@@ -120,6 +185,26 @@ class HttpParcelService implements ParcelService {
       ParcelList: parcels.map((parcel) => this.mapParcel(parcel)),
       PrintPosition: printPosition,
       printerType: printerType,
+    }
+  }
+
+  private createGetParcelStatusesRequest({
+    input,
+    username,
+    password,
+  }: {
+    input: GetParcelStatusesInput
+    username: string
+    password: string
+  }) {
+    const { parcelNumber, language = 'EN' } = input
+
+    return {
+      Username: username,
+      Password: this.mapPassword(password),
+      ParcelNumber: parcelNumber,
+      LanguageIsoCode: language,
+      ReturnPOD: false,
     }
   }
 
@@ -142,9 +227,20 @@ class HttpParcelService implements ParcelService {
 
   // Currently not used, but I left it here in case we will need to set the PickupDate.
   // Why implement it twice, eh?
-  // private mapDate(date: Date) {
-  //   return `\\/Date(${date.getTime() * 1000})\\/`
-  // }
+  private mapDateToJSONDate(date: Date) {
+    return `\\/Date(${date.getTime() * 1000})\\/`
+  }
+
+  private convertStatusDate(statusDate: string) {
+    const timestampMatch = statusDate.match(/\/Date\((\d+)([+-]\d{4})\)\//)
+
+    if (timestampMatch) {
+      const timestamp = parseInt(timestampMatch[1], 10)
+      return new Date(timestamp)
+    } else {
+      throw new Error('Invalid statusDate format')
+    }
+  }
 
   private mapAddress(address: Address) {
     return {
