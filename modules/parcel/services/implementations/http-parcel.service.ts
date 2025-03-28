@@ -177,12 +177,13 @@ class HttpParcelService implements ParcelService {
     username: string
     password: string
   }) {
-    const { parcels, printPosition, printerType } = input
+    const { parcels, printPosition, printerType, webshopEngine } = input
 
     return {
       Username: username,
       Password: this.mapPassword(password),
       ParcelList: parcels.map((parcel) => this.mapParcel(parcel)),
+      WebshopEngine: webshopEngine,
       PrintPosition: printPosition,
       printerType: printerType,
     }

@@ -9,6 +9,7 @@ export type PrintLabelsInput = {
   parcels: Parcel[]
   printPosition: PrintPosition
   printerType: PrinterType
+  webshopEngine: string
 }
 
 export type PrintLabelsOutput = {

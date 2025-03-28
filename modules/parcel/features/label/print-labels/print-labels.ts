@@ -37,7 +37,7 @@ class PrintLabels
   }
 
   async execute(request: PrintLabelsDTO): Promise<PrintLabelsResponse> {
-    const { name, parcels, printPosition, printerType } = request
+    const { name, parcels, printPosition, printerType, webshopEngine } = request
 
     if (!parcels.length) {
       return failure(new Errors.NoParcelsError())
@@ -48,7 +48,12 @@ class PrintLabels
     let generateOutput: GeneratePdfDownloadUrlOutput
 
     try {
-      printOutput = await this.print(parcels, printPosition, printerType)
+      printOutput = await this.print(
+        parcels,
+        printPosition,
+        printerType,
+        webshopEngine
+      )
     } catch (err) {
       switch (err.constructor) {
         case AllLabelsFailedException:
@@ -76,12 +81,14 @@ class PrintLabels
   private print(
     parcels: Parcel[],
     printPosition: PrintPosition,
-    printerType: PrinterType
+    printerType: PrinterType,
+    webshopEngine: string
   ): Promise<PrintLabelsOutput> {
     return this.parcelService.printLabels({
       parcels,
       printPosition,
       printerType,
+      webshopEngine,
     })
   }
 

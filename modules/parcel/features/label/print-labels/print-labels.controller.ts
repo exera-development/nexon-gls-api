@@ -40,7 +40,7 @@ class PrintLabelsController extends BaseController {
       return this.clientError(res, formatValidationError(err))
     }
 
-    const { parcels, printPosition, printerType } = request
+    const { parcels, printPosition, printerType, webshopEngine } = request
 
     const dto: PrintLabelsDTO = {
       name: generateId(),
@@ -51,6 +51,7 @@ class PrintLabelsController extends BaseController {
       })),
       printPosition,
       printerType,
+      webshopEngine,
     }
 
     try {

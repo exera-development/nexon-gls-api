@@ -7,6 +7,7 @@ interface PrintLabelsDTO {
   parcels: Parcel[]
   printPosition: PrintPosition
   printerType: PrinterType
+  webshopEngine: string
 }
 
 export default PrintLabelsDTO

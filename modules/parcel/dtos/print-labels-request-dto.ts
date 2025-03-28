@@ -6,6 +6,7 @@ type PrintLabelsRequestDTO = {
   parcels: OutboundParcel[]
   printPosition: PrintPosition
   printerType: PrinterType
+  webshopEngine: string
 }
 
 export default PrintLabelsRequestDTO

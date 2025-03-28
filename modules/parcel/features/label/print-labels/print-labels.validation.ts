@@ -36,6 +36,7 @@ const PrintLabelsRequestDTOSchema = z.object({
   parcels: z.array(OutboundParcelSchema),
   printPosition: PrintPositionSchema,
   printerType: PrinterTypeSchema,
+  webshopEngine: z.string(),
 })
 
 export const parsePrintLabelsRequestDTO = (
