@@ -17,7 +17,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"parcels\": [{\r\n        \"clientReference\": \"parcel_1\",\r\n        \"count\": 1,\r\n        \"codAmount\": 0,\r\n        \"codReference\": \"\",\r\n        \"content\": \"\",\r\n        \"deliveryAddress\": {\r\n            \"name\": \"Meszaros Hunor\",\r\n            \"street\": \"str. Babos Dr.\",\r\n            \"houseNumber\": \"561\",\r\n            \"houseNumberInfo\": \"\",\r\n            \"city\": \"Joseni\",\r\n            \"zipCode\": \"537130\",\r\n            \"countryIsoCode\": \"RO\",\r\n            \"contactName\": \"Meszaros Hunor\",\r\n            \"contactPhone\": \"+40744163414\",\r\n            \"contactEmail\": \"hunex91@gmail.com\"\r\n        }\r\n    }],\r\n    \"printPosition\": 1,\r\n    \"printerType\": \"A4_2x2\"\r\n}",
+							"raw": "{\r\n    \"parcels\": [{\r\n        \"clientReference\": \"parcel_1\",\r\n        \"count\": 1,\r\n        \"codAmount\": 0,\r\n        \"codReference\": \"\",\r\n        \"content\": \"\",\r\n        \"deliveryAddress\": {\r\n            \"name\": \"Meszaros Hunor\",\r\n            \"street\": \"str. Babos Dr.\",\r\n            \"houseNumber\": \"561\",\r\n            \"houseNumberInfo\": \"\",\r\n            \"city\": \"Joseni\",\r\n            \"zipCode\": \"537130\",\r\n            \"countryIsoCode\": \"RO\",\r\n            \"contactName\": \"Meszaros Hunor\",\r\n            \"contactPhone\": \"+40744163414\",\r\n            \"contactEmail\": \"hunex91@gmail.com\"\r\n        }\r\n    }],\r\n    \"printPosition\": 1,\r\n    \"printerType\": \"A4_2x2\",\r\n    \"webshopEngine\": \"Google Sheets\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
