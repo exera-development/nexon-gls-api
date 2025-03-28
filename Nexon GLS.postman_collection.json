@@ -1,0 +1,123 @@
+{
+	"info": {
+		"_postman_id": "65af6d94-11c9-4c03-ad82-97e1924acfa4",
+		"name": "Nexon GLS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "335971",
+		"_collection_link": "https://navigator-cloud.postman.co/workspace/Shared-with-Nexon~60f3842b-7503-4c36-a4d3-1b6d2a9bd55d/collection/335971-65af6d94-11c9-4c03-ad82-97e1924acfa4?action=share&source=collection_link&creator=335971"
+	},
+	"item": [
+		{
+			"name": "V1",
+			"item": [
+				{
+					"name": "Print Labels",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"parcels\": [{\r\n        \"clientReference\": \"parcel_1\",\r\n        \"count\": 1,\r\n        \"codAmount\": 0,\r\n        \"codReference\": \"\",\r\n        \"content\": \"\",\r\n        \"deliveryAddress\": {\r\n            \"name\": \"Meszaros Hunor\",\r\n            \"street\": \"str. Babos Dr.\",\r\n            \"houseNumber\": \"561\",\r\n            \"houseNumberInfo\": \"\",\r\n            \"city\": \"Joseni\",\r\n            \"zipCode\": \"537130\",\r\n            \"countryIsoCode\": \"RO\",\r\n            \"contactName\": \"Meszaros Hunor\",\r\n            \"contactPhone\": \"+40744163414\",\r\n            \"contactEmail\": \"hunex91@gmail.com\"\r\n        }\r\n    }],\r\n    \"printPosition\": 1,\r\n    \"printerType\": \"A4_2x2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/labels",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"labels"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Parcel Statuses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/v1/parcels/:parcelNumber?language=EN",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"parcels",
+								":parcelNumber"
+							],
+							"query": [
+								{
+									"key": "language",
+									"value": "EN"
+								}
+							],
+							"variable": [
+								{
+									"key": "parcelNumber",
+									"value": "59483687"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ping",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/ping",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"ping"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{api_key}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
